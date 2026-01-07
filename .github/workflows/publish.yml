@@ -41,7 +41,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "dist.tar.gz"
           target: "/opt/moonc/frontend"
-          strip_components: 1
 
       - name: 远程部署与版本留存
         uses: appleboy/ssh-action@v1.0.3

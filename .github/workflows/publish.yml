@@ -6,7 +6,7 @@ on:
       target:
         description: "选择发版目标"
         required: true
-        default: "backend"
+        default: "frontend"
         type: choice
         options:
           - frontend
@@ -29,7 +29,6 @@ jobs:
 
       - name: 打包
         run: |
-          cd frontend
           npm install
           npm run build
           tar -czf dist.tar.gz dist/
@@ -40,7 +39,7 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "frontend/dist.tar.gz"
+          source: "dist.tar.gz"
           target: "/opt/moonc/frontend"
           strip_components: 1
 

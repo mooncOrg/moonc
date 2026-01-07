@@ -71,16 +71,10 @@ const relatedWebList = [{
     url: 'https://moonc.love',
     name: '主页',
 }, {
-    url: 'https://filestore.moonc.love',
+    url: 'https://filehub.moonc.love',
     name: '图床',
 }, {
     url: 'https://music.moonc.love',
     name: '音乐播放器',
-}, {
-    url: 'https://factory.moonc.love',
-    name: '无极工厂',
-}, {
-    url: 'https://game.moonc.love',
-    name: '星闪',
 }]
 </script>

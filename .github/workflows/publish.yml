@@ -1,0 +1,62 @@
+name: Manual Publish
+run-name: Deploy ${{ github.event.inputs.version }} to ${{ github.event.inputs.target }} by @${{ github.actor }}
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "选择发版目标"
+        required: true
+        default: "backend"
+        type: choice
+        options:
+          - frontend
+      version:
+        description: "版本号 (如 v1.0.0)"
+        required: true
+
+jobs:
+  # --- 前端构建任务 ---
+  build-frontend:
+    if: ${{ github.event.inputs.target == 'frontend' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: 打包
+        run: |
+          cd frontend
+          npm install
+          npm run build
+          tar -czf dist.tar.gz dist/
+
+      - name: 发送到服务器
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "frontend/dist.tar.gz"
+          target: "/opt/moonc/frontend"
+          strip_components: 1
+
+      - name: 远程部署与版本留存
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/moonc/frontend
+            
+            mkdir -p backups
+            
+            cp dist.tar.gz backups/frontend-${{ github.event.inputs.version }}.tar.gz
+            
+            tar -xzf dist.tar.gz
+            
+            rm dist.tar.gz

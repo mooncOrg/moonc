@@ -73,8 +73,5 @@ const relatedWebList = [{
 }, {
     url: 'https://filehub.moonc.love',
     name: '图床',
-}, {
-    url: 'https://music.moonc.love',
-    name: '音乐播放器',
 }]
 </script>
